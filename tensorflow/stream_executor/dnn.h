@@ -761,17 +761,27 @@ class ProfileResult {
 class AlgorithmConfig {
  public:
   AlgorithmConfig() {}
-  explicit AlgorithmConfig(AlgorithmDesc algorithm) : algorithm_(algorithm) {}
+  explicit AlgorithmConfig(AlgorithmDesc algorithm)
+      : algorithm_(algorithm), algorithm_scratch_size_(0) {}
   AlgorithmConfig(AlgorithmDesc algorithm, AlgorithmDesc algorithm_no_scratch)
-      : algorithm_(algorithm), algorithm_no_scratch_(algorithm_no_scratch) {}
+      : algorithm_(algorithm),
+        algorithm_scratch_size_(0),
+        algorithm_no_scratch_(algorithm_no_scratch) {}
+  explicit AlgorithmConfig(AlgorithmDesc algorithm, int64 scratch_size)
+      : algorithm_(algorithm),
+        algorithm_scratch_size_(scratch_size),
+        algorithm_no_scratch_() {}
   AlgorithmDesc algorithm() const { return algorithm_; }
   void set_algorithm(AlgorithmDesc val) { algorithm_ = val; }
+  int64 algorithm_scratch_size() const { return algorithm_scratch_size_; }
+  void set_algorithm_scratch_size(int64 val) { algorithm_scratch_size_ = val; }
   AlgorithmDesc algorithm_no_scratch() const { return algorithm_no_scratch_; }
   void set_algorithm_no_scratch(AlgorithmDesc val) {
     algorithm_no_scratch_ = val;
   }
   bool operator==(const AlgorithmConfig& other) const {
     return this->algorithm_ == other.algorithm_ &&
+           this->algorithm_scratch_size_ == other.algorithm_scratch_size_ &&
            this->algorithm_no_scratch_ == other.algorithm_no_scratch_;
   }
   bool operator!=(const AlgorithmConfig& other) const {
@@ -781,6 +791,8 @@ class AlgorithmConfig {
 
  private:
   AlgorithmDesc algorithm_;
+  // Size of scratch memory for algorithm_, in bytes
+  int64 algorithm_scratch_size_;
   AlgorithmDesc algorithm_no_scratch_;
 };
 
